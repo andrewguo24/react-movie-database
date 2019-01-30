@@ -1,7 +1,7 @@
 import React from "react";
 
-const Like = props => {
-  const { liked, onClick } = props;
+const Like = ({ liked, onClick }) => {
+  // const { liked, onClick } = props;
   let classes = "fa fa-heart";
   if (!liked) classes += "-o"; //if this.props.liked is false then classese = "fa fa-heart-o"
   return (

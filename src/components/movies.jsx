@@ -54,10 +54,29 @@ export default class Movies extends Component {
     this.setState({ sortColumn });
   };
 
+  getPageData = () => {
+    const {
+      movies: allMovies,
+      pageSize,
+      currentPage,
+      selectedGenre,
+      sortColumn
+    } = this.state;
+    const filtered =
+      selectedGenre && selectedGenre._id
+        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+        : allMovies;
+
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = pagenate(sorted, currentPage, pageSize);
+
+    return { totalCount: filtered.length, data: movies };
+  };
+
   render() {
     const { length: count } = this.state.movies;
     const {
-      movies: allMovies,
       pageSize,
       currentPage,
       genres,
@@ -67,14 +86,7 @@ export default class Movies extends Component {
 
     if (count === 0) return <p>Sorry, there are no available movies.</p>;
 
-    const filtered =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-        : allMovies;
-
-    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
-
-    const movies = pagenate(sorted, currentPage, pageSize);
+    const { totalCount, data: movies } = this.getPageData();
 
     return (
       <div className="row">
@@ -86,7 +98,7 @@ export default class Movies extends Component {
           />
         </div>
         <div className="col">
-          <p>Showing {filtered.length} movies in the database.</p>
+          <p>Showing {totalCount} movies in the database.</p>
           <MoviesTable
             movies={movies}
             onLike={this.handleLike}
@@ -95,7 +107,7 @@ export default class Movies extends Component {
             sortColumn={sortColumn}
           />
           <Pagenation
-            itemsCount={filtered.length}
+            itemsCount={totalCount}
             pageSize={pageSize}
             currentPage={currentPage}
             onPageChange={this.handlePageChange}

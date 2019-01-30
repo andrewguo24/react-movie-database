@@ -2,8 +2,7 @@ import React from "react";
 import _ from "lodash";
 import PropTypes from "prop-types";
 
-const Pagenation = props => {
-  const { itemsCount, pageSize, currentPage, onPageChange } = props;
+const Pagenation = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
   console.log("Current Page", currentPage);
   const pagesCount = Math.ceil(itemsCount / pageSize);
   console.log("Total pages", pagesCount);
@@ -11,15 +10,19 @@ const Pagenation = props => {
   const pages = _.range(1, pagesCount + 1);
   return (
     <nav aria-label="Page navigation example">
-      <ul class="pagination">
+      <ul className="pagination">
         {pages.map(page => (
           <li
             key={page}
-            class={page === currentPage ? "page-item active" : "page-item"}
+            className={page === currentPage ? "page-item active" : "page-item"}
           >
-            <a class="page-link" onClick={() => onPageChange(page)}>
+            <div
+              className="page-link"
+              onClick={() => onPageChange(page)}
+              href="#"
+            >
               {page}
-            </a>
+            </div>
           </li>
         ))}
       </ul>
@@ -35,29 +38,3 @@ Pagenation.propTypes = {
 };
 
 export default Pagenation;
-
-// export default class Pagenation extends Component {
-//   render() {
-//     return (
-//       <nav aria-label="Page navigation example">
-//         <ul class="pagination">
-//           <li class="page-item">
-//             <a class="page-link" href="#">
-//               1
-//             </a>
-//           </li>
-//           <li class="page-item">
-//             <a class="page-link" href="#">
-//               2
-//             </a>
-//           </li>
-//           <li class="page-item">
-//             <a class="page-link" href="#">
-//               3
-//             </a>
-//           </li>
-//         </ul>
-//       </nav>
-//     );
-//   }
-// }
